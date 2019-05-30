@@ -233,15 +233,60 @@ public class ProbModelBackBisimExplorer {
 		Map<String, Double> mp = new HashMap<String, Double>();
 		List<String> sd = this.backBisimModel.quotientStates.get((int) finalState).getSecretData();
 //		mainLog.println(sd);
-		for (String s: sd) {
-			if (mp.containsKey(s)) {
-				double d = mp.get(s);
-				mp.put(s, d + 1.0/sd.size());
+		if (priorKnowledgeType == UNIFORM_PRIOR_KNOWLEDGE){
+			for (String s: sd) {
+				if (mp.containsKey(s)) {
+					double d = mp.get(s);
+					mp.put(s, d + 1.0/sd.size());
+				}
+				else
+					mp.put(s, 1.0/sd.size());
 			}
-			else
-				mp.put(s, 1.0/sd.size());
 		}
+		else 
+		{
+			Map<String, Integer> final_states_secret_frequencies = finalStatesSecretFrequencies(sd);
+			double denom = 0.0;
+			String s;
+			int freq;
+			double fssd_prob, fsp,d;
+		    for(Map.Entry<String, Integer> entry_freq: final_states_secret_frequencies.entrySet()){
+		        s = entry_freq.getKey();
+		        freq = entry_freq.getValue();
+		        fssd_prob = this.priorKnowledge.get(s);
+		        fsp = fssd_prob * freq;
+		        denom += fsp;
+		    }
+//		    mainLog.println(final_states_secret_frequencies);
+//		    mainLog.println(denom);
+		    
+		    for(Map.Entry<String, Integer> entry_freq: final_states_secret_frequencies.entrySet()){
+		    	s = entry_freq.getKey();
+		        int final_state_frequency = entry_freq.getValue();
+		        fssd_prob = this.priorKnowledge.get(s);
+		        fsp = fssd_prob * final_state_frequency;
+		        if (denom != 0)
+		        	d = fsp / denom;
+		        else 
+		        	d = 0;
+		        mp.put(s, d);
+		    }
+		}	
 		return mp;
+	}
+
+	private Map<String, Integer> finalStatesSecretFrequencies(List<String> sd) {
+		Map<String, Integer> finStateSecretFreq = new HashMap<>();
+		int f;
+	        
+	    for(String s: sd) {
+	    	f=0;
+	    	if(finStateSecretFreq.containsKey(s)) 
+	    		f = finStateSecretFreq.get(s);
+	    	finStateSecretFreq.put(s, f+1);
+	     }
+	     
+	    return finStateSecretFreq;
 	}
 
 	/**
