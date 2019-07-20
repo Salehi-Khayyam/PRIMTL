@@ -3,7 +3,7 @@
 
 The tool is built upon the [PRISM model checker](http://www.prismmodelchecker.org/). PRISM compiles a program written in the PRISM language, builds a discrete-time Markov chain model of the program and stores it using BDDs (Binary Decision Diagrams) and MTBDDs (Multi-Terminal Binary Decision Diagrams). PRIMTL uses these data structures to extract the set of reachable states and also create a sparse matrix containing the transitions. It then employs a depth-first path exploration algorithm (trace-based method) to find all paths and traces of the program. For each trace, it computes the probability of the trace and the posterior entropy of the secret induced by the trace. Furthermore, PRIMTL exploits a back-bisimulation-based method to highly minimize the state space to quotient states. It computes the leakage of the program from the quotient model. Using these values, PRIMTL computes the *exact* values of the information leakage. 
 
-A main difference of PRIMTL and other related leakage quantification tools is that PRISM-InterLeak takes into account *intermediate leakages*. This is suitable for *concurrent* programs, in which the attacker is able to observe intermediate values of publicly observable variables. 
+A main difference of PRIMTL and other related leakage quantification tools is that PRMTL takes into account *intermediate leakages*. This is suitable for *concurrent* programs, in which the attacker is able to observe intermediate values of publicly observable variables. 
 
 # Installation
 Compiling:
